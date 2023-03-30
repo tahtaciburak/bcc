@@ -27,13 +27,17 @@ APPS = \
 	cpufreq \
 	drsnoop \
 	execsnoop \
+	exitsnoop \
 	filelife \
+	filetop \
 	fsdist \
 	fsslower \
 	funclatency \
 	gethostlatency \
 	hardirqs \
+	ksnoop \
 	llcstat \
+	mountsnoop \
 	numamove \
 	offcputime \
 	opensnoop \
@@ -47,6 +51,7 @@ APPS = \
 	syscount \
 	tcpconnect \
 	tcpconnlat \
+	tcprtt \
 	vfsstat \
 	#
 
@@ -99,7 +104,7 @@ $(OUTPUT)/%.skel.h: $(OUTPUT)/%.bpf.o | $(OUTPUT)
 
 $(OUTPUT)/%.bpf.o: %.bpf.c $(LIBBPF_OBJ) $(wildcard %.h) $(ARCH)/vmlinux.h | $(OUTPUT)
 	$(call msg,BPF,$@)
-	$(Q)$(CLANG) -g -O2 -target bpf -D__TARGET_ARCH_$(ARCH)		      \
+	$(Q)$(CLANG) $(CFLAGS) -target bpf -D__TARGET_ARCH_$(ARCH)	      \
 		     -I$(ARCH)/ $(INCLUDES) -c $(filter %.c,$^) -o $@ &&      \
 	$(LLVM_STRIP) -g $@
 
